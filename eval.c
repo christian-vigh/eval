@@ -1388,7 +1388,7 @@ static int  eval_parse ( const char *		str,
    { 
 	char * 			startp			=  0,			// Start and end of next token in the input string
 	     *			endp			=  0 ;
-	void *			param ;						// Data returned by the eval_lex() function
+	void *			param			=  0 ;			// Data returned by the eval_lex() function
 	operator_token *	op ;						// Operator token (may be returned by eval_lex)
 	int 			token ;						// Token value
 	int 			last_token 		=  TOKEN_EOF ;		// Last seen token value
