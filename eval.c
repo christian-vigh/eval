@@ -254,14 +254,6 @@ static operator_token		unary_minus		=
 static operator_token		left_parenthesis	=
 	{ "("	, 1, OP_LEFT_PARENT	, 50, ASSOC_NONE , 0	} ;
 
-static operator_token		right_parenthesis	=
-	{ ")"	, 1, OP_RIGHT_PARENT	, 50, ASSOC_NONE , 0	} ;
-
-// And for comma
-static operator_token		comma_operator		=  
-	{ ","	, 1, OP_COMMA	, 50, ASSOC_NONE , 0	} ;
-
-
 /*==============================================================================================================
  *
  *  Structures for constant and function definitions.
@@ -303,17 +295,17 @@ static primitive_list		eval_constant_definitions	=  { 0, 0, sizeof ( evaluator_c
   ==============================================================================================================*/    
 static char *	eval_skip_spaces ( char *  str, int *  line, int *  character )
    {
-	while  ( * str  &&  isspace ( * str ) )
+	while  ( * str  &&  ( int ) isspace ( * str ) )
 	   {
-		* character ++ ;
+		( * character ) ++ ;
 
 		if  ( * str  ==  '\n' )
 		   {
-			* line ++ ;
+			( * line ) ++ ;
 			* character	=  1 ;
 		    }
 		else if  ( * str  !=  '\r' )
-			* character ++ ;
+			( * character ) ++ ;
 
 		str ++ ;
 	    }
@@ -726,7 +718,7 @@ static int	eval_double_value ( char *  str, int  length, eval_double *  result )
 		char		ch, ich ;
 
 
-		switch ( toupper ( * p ) )
+		switch ( toupper ( ( int ) * p ) )
 		   {
 			case	'B'	:  base	 =   2 ; break ;
 			case	'O'	:  base	 =   8 ; break ;
@@ -744,7 +736,7 @@ static int	eval_double_value ( char *  str, int  length, eval_double *  result )
 
 		while  ( * p ) 
 		   {
-			ich	=  toupper ( * p ) ;
+			ich	=  toupper ( ( int ) * p ) ;
 			ch	=  ( ich  >=  'A' ) ?  ich - 'A' + 10 : ich - '0' ;
 
 			value   =  ( value * base ) + ch ;
@@ -795,16 +787,16 @@ static int eval_lex ( char *  str, char **  startp, char **  endp, void **  op, 
 	* op 		=  NULL ;
 			
 	// Name found (maybe a function name)
-	if  ( isalpha ( * str )  ||  * str  ==  '_' )
+	if  ( isalpha (( int )  * str )  ||  * str  ==  '_' )
 	   {
-		while  ( isalnum ( * str )  ||  * str  ==  '_' )
+		while  ( isalnum ( ( int ) * str )  ||  * str  ==  '_' )
 			str ++ ;
 		
 		token 		=  TOKEN_NAME ;
 	    }
 	// Number, either an integer with an optional base or a float
 	// At that point we don't try to convert anything, just verify that the number is correct
-	else if  ( isdigit ( * str ) )
+	else if  ( isdigit ( ( int ) * str ) )
 	   {
 		int 	found_base 	=  0,
 			found_dot 	=  0,
@@ -813,7 +805,7 @@ static int eval_lex ( char *  str, char **  startp, char **  endp, void **  op, 
 		char 	ch, ich ;
 		
 
-		if  ( * str  ==  '0'  &&  isxdigit ( str [1] ) )
+		if  ( * str  ==  '0'  &&  isxdigit ( ( int ) str [1] ) )
 		   {
 			char * 	p 	=  str + 1 ;
 			int  	found 	=  0 ;
@@ -851,7 +843,7 @@ static int eval_lex ( char *  str, char **  startp, char **  endp, void **  op, 
 
 		while  ( * str )
 		   {
-			ch 	=  toupper ( * str ) ;
+			ch 	=  toupper ( ( int ) * str ) ;
 			   
 			switch  ( ch )
 			   {
@@ -954,9 +946,9 @@ NumberEnd : ;
 			* startp	=  str ;
 
 			// A variable name must start with a letter or an underline
-			if  ( isalpha ( * str )  ||  * str  ==  '_' )
+			if  ( isalpha ( ( int ) * str )  ||  * str  ==  '_' )
 			   {
-				while  ( * str  &&  ( isalnum ( * str )  ||  * str  ==  '_' ) )
+				while  ( * str  &&  ( isalnum ( ( int ) * str )  ||  * str  ==  '_' ) )
 					str ++ ;
 
 				token	=  TOKEN_VARIABLE ;
@@ -979,7 +971,7 @@ NumberEnd : ;
 
 		str	=  eval_skip_spaces ( str, line, character ) ;
 
-		while  ( isdigit ( * str )  )
+		while  ( isdigit ( ( int ) * str )  )
 		   {
 			register_id	=  ( register_id * 10 ) + ( * str - '0' ) ;
 			found_digits	=  1 ;
@@ -1056,9 +1048,9 @@ static int	eval_compute ( eval_stack *  stack, eval_double *  output, eval_callb
 	eval_stack_entry *	se ;					// Current stack entry
 	operator_token *	ot ;					// Current token
 	int			i ;
-	eval_double		value1,					// Result + values for binary operators
-				value2, 
-				result  ;
+	eval_double		value1			=  0,		// Result + values for binary operators
+				value2			=  0, 
+				result			=  0 ;
 	int			status			=  1 ;		// Return code ; 1 = OK
 	eval_double *		function_args		=  NULL ;	// Placeholder used to store function arguments
 	int			function_args_max	=  0 ;

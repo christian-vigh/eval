@@ -132,7 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="eval.c" />
-    <ClInclude Include="evalfuncs.c">
+    <ClInclude Include="evalfuncs.h">
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClCompile Include="main.c" />
