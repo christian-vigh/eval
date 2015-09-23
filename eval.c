@@ -295,7 +295,7 @@ static primitive_list		eval_constant_definitions	=  { 0, 0, sizeof ( evaluator_c
   ==============================================================================================================*/    
 static char *	eval_skip_spaces ( char *  str, int *  line, int *  character )
    {
-	while  ( * str  &&  ( int ) isspace ( * str ) )
+	while  ( * str  &&  isspace ( ( int ) * str ) )
 	   {
 		( * character ) ++ ;
 
@@ -1386,8 +1386,8 @@ static int  eval_parse ( const char *		str,
 			 eval_stack *		operator_stack, 
 			 eval_callback		callback ) 
    { 
-	char * 			startp,						// Start and end of next token in the input string
-	     *			endp ;
+	char * 			startp			=  0,			// Start and end of next token in the input string
+	     *			endp			=  0 ;
 	void *			param ;						// Data returned by the eval_lex() function
 	operator_token *	op ;						// Operator token (may be returned by eval_lex)
 	int 			token ;						// Token value
