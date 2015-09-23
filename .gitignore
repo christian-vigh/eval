@@ -1,0 +1,9 @@
+Debug/
+Eval.opensdf
+Eval.sdf
+Eval.suo
+Eval.tss
+a.exe
+*.stackdump
+ipch/
+x64/
